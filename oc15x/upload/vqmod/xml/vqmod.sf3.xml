@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+	<id>VQMOD SF3</id>
+	<version>3.0.0</version>
+	<vqmver required="true">2.4.0</vqmver>
+	<author>simonoop.com</author>
+
+	<file path="catalog/model/catalog/" name="product.php">
+
+		<operation error="skip">
+			<search position="after" regex="true"><![CDATA[~getProducts|getProductSpecials|getTotalProducts~]]></search>
+			<add><![CDATA[
+				/*##########################################################################################
+				##
+				## SimonFilters - sf3 - 3.0.0 Build 0052
+				##
+				##########################################################################################*/
+				    $backt = debug_backtrace();
+				    $this->load->model("simonoop/sf3tools");
+					$this->model_simonoop_sf3tools->loadsf3();
+					if(is_object($this->model_simonoop_sf3)) {
+						$this->model_simonoop_sf3->setCaller($backt[1]['class']);
+						$this->model_simonoop_sf3->setOCFunction(__FUNCTION__);
+						if(isset($data))$data = $this->model_simonoop_sf3->initFilterSubCategories($data);
+					}
+				/*##########################################################################################
+				##
+				## /SimonFilters - sf3 - 3.0.0 Build 0052
+				##
+				##########################################################################################*/
+			]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="before"><![CDATA[$query = $this->db->query($sql);]]></search>
+			<add><![CDATA[
+				/*##########################################################################################
+				##
+				## SimonFilters - sf3 - 3.0.0 Build 0052
+				##
+				## Add filtering SQL
+				##
+				##########################################################################################*/
+				if(is_object($this->model_simonoop_sf3)) {
+					$sql = $this->model_simonoop_sf3->addFilteringSQL($sql);
+				}
+				/*##########################################################################################
+				##
+				## /SimonFilters - sf3 - 3.0.0 Build 0052
+				##
+				##########################################################################################*/
+			]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[public function getProducts]]></search>
+			<add><![CDATA[
+				/*##########################################################################################
+				##
+				## SimonFilters - sf3 - 3.0.0 Build 0052
+				##
+				## YMM compatibility layer
+				##
+				##########################################################################################*/
+				public function sf3_get_ymm_where(){
+					return $this->ymm_where;
+				}
+				/*##########################################################################################
+				##
+				## /SimonFilters - sf3 - 3.0.0 Build 0052
+				##
+				##########################################################################################*/
+			]]></add>
+		</operation>
+	</file>
+
+	<!--/*##########################################################################################
+	##
+	## SimonFilters - sf3 - 3.0.0 Build 0045
+	##
+	## 3rdparty compatibility - isearch
+	##
+	##########################################################################################*/-->
+	<file path="catalog/model/catalog/isearch.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[$cache = md5(http_build_query($attributes));]]></search>
+			<add><![CDATA[
+				/*##########################################################################################
+				##
+				## SimonFilters - sf3 - 3.0.0 Build 0045
+				##
+				##########################################################################################*/
+
+				$sf3_settings = $this->config->get("sf3_general");
+				if(isset($sf3_settings['isearch']) && $sf3_settings['isearch']=='yes'){
+					$backt = debug_backtrace();
+					$this->load->model("simonoop/sf3tools");
+					$this->model_simonoop_sf3tools->loadsf3();
+					if(is_object($this->model_simonoop_sf3)) {
+						$this->model_simonoop_sf3->setCaller($backt[1]['class']);
+						$this->model_simonoop_sf3->setOCFunction(__FUNCTION__);
+						if(isset($data))$data = $this->model_simonoop_sf3->initFilterSubCategories($data);
+
+						if(isset($this->request->get['payload'])){
+							$attributes['sf3payload'] = md5($this->request->get['payload']) .md5(rand());
+						}
+
+						if(isset($this->request->post['payload'])){
+							$attributes['sf3payload'] = md5($this->request->post['payload']) .md5(rand());
+						}
+					}
+				}
+				/*##########################################################################################
+				##
+				## /SimonFilters - sf3 - 3.0.0 Build 0045
+				##
+				##########################################################################################*/
+			]]></add>
+		</operation>
+
+		<operation error="skip">
+			<search position="before"><![CDATA[$result = $this->db->query($sql);]]></search>
+			<add><![CDATA[
+				/*##########################################################################################
+				##
+				## SimonFilters - sf3 - 3.0.0 Build 0045
+				##
+				##########################################################################################*/
+				$sf3_settings = $this->config->get("sf3_general");
+				if(isset($sf3_settings['isearch']) && $sf3_settings['isearch']=='yes'){
+					$sql = $this->model_simonoop_sf3->addFilteringSQL($sql);
+				}
+				/*##########################################################################################
+				##
+				## /SimonFilters - sf3 - 3.0.0 Build 0045
+				##
+				##########################################################################################*/
+			]]></add>
+		</operation>
+	</file>
+
+	<!--/*##########################################################################################
+	##
+	## SimonFilters - sf3 - 3.0.0 Build 0045
+	##
+	## 3rdparty compatibility - seo_pro
+	##
+	##########################################################################################*/
+	<file path="catalog/controller/common/seo_pro.php">
+		<operation error="skip">
+			<search position="after"><![CDATA[$this->registry->set('language', $language);]]></search>
+			<add><![CDATA[
+			/*##########################################################################################
+			##
+			## SimonFilters - sf3 - 3.0.0 Build 0045
+			##
+			##########################################################################################*/
+			if(preg_match('/payload/',$_SERVER['QUERY_STRING'])){
+       				$params = explode('&', $_SERVER['QUERY_STRING']);
+       				foreach ($params as $pair) {
+       					@list($key, $value) = explode('=', $pair);
+    					$key = str_replace('amp;', '', $key);
+    					if($key=='payload'){
+    						$this->request->get['payload'] = $value;
+    					}
+       					$_GET[urldecode($key)] = urldecode($value);
+       				}
+
+			}
+			/*##########################################################################################
+			##
+			## /SimonFilters - sf3 - 3.0.0 Build 0045
+			##
+			##########################################################################################*/
+			]]></add>
+		</operation>
+	</file>
+	-->
+
+</modification>

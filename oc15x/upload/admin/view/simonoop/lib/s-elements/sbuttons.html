@@ -1,0 +1,11 @@
+<div class="sbuttons-wrapper">
+    <div class="slabel" ng-if="label">{{label}}</div>
+    <div class="sbuttons">
+        <div 
+            class="sbutton" 
+                ng-repeat="a in options" 
+                ng-click="select(a)"
+                ng-class="isActive(a)?'active':''"
+            >{{getText(a)}}</div>
+    </div>
+</div>

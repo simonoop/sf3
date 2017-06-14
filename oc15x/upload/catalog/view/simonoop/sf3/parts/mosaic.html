@@ -1,0 +1,45 @@
+<div class="sf3-element">
+    <div class="sf3-element-header"  ng-init="hide=(o.collapsible?(o.collapsibleDefault=='expanded'?false:true):false)">
+        <div class="sf3-title">{{f.caption[env.language_id]||f.source.name}}
+        
+        <a ng-if="o.help.status=='text'" href="#" class="sf3-help sf3-help-text"  title="{{o.help_text[env.language_id]}}"></a>
+        <a ng-if="o.help.status=='link'" href="{{o.help.link}}" target="_blank" class="sf3-help sf3-help-link"></a>
+
+        
+        <div class="collapsible-trigger" ng-class="hide?'up':'down'" ng-show="o.collapsible" ng-click="o.collapsible?hide=!hide:null"></div>
+        </div>
+        
+    </div>  
+
+    <div class="sf3-body animate-show" ng-hide='hide'>
+    
+        <div class="sf3-searchbox-wrapper" ng-show="f.settings.searchbox.status=='yes'">
+            <input class="sf3-searchbox" ng-model="xx"/> 
+        </div>      
+    
+        <div class="sf3-filter" ng-class="{'dodo':o.showmore.status=='scrollbar'}">     
+        
+            <div ng-class="{'sf3-scrollable':o.showmore.status=='scrollbar', 'sf3-readmore':o.showmore.status=='more/less'}">
+
+
+                <div 
+                    ng-repeat="fd in f.filterdata | filter:{text:xx}" ng-click="activate(fd.idx)" ng-class="o.zero(f.totals[fd.idx].total)"
+                    class="sf3-image-from-option-name mosaic" 
+                    style="background-color:{{fd.external?fd.external:fd.value}};width:{{f.images.width}};height:{{f.images.height}}"
+                    ng-if="f.images.source=='value as CSS color'">
+                </div>
+                
+                <div 
+                    ng-repeat="fd in f.filterdata | filter:{text:xx}" ng-click="activate(fd.idx)" ng-class="o.zero(f.totals[fd.idx].total)"
+                    class="sf3-image-from-option-image mosaic"
+                    ng-if="f.images.source=='option image' || f.source.type=='manufacturers'">
+                     <img style="width:{{f.images.width}};height:{{f.images.height}}" src="image/{{fd.image}}" ng-class="{'mosaic-active':fd.active}"/>
+                </div>
+                   
+            </div>                 
+
+        </div>        
+
+    </div>
+      
+</div>

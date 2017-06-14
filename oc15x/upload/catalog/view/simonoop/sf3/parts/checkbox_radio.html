@@ -1,0 +1,68 @@
+<div class="sf3-element">
+    <div class="sf3-element-header"  ng-init="hide=(o.collapsible?(o.collapsibleDefault=='expanded'?false:true):false)">
+        <div class="sf3-title">{{f.caption[env.language_id]||f.source.name}}
+
+        <div ng-if="o.help.status=='text'" href="#" class="sf3-help sf3-help-text"  title="{{o.help_text[env.language_id]}}"></div>
+        <a ng-if="o.help.status=='link'" href="{{o.help.link}}" target="_blank" class="sf3-help sf3-help-link"></a>
+
+
+        <div class="collapsible-trigger" ng-class="hide?'up':'down'" ng-show="o.collapsible" ng-click="o.collapsible?hide=!hide:null"></div>
+        </div>
+
+    </div>
+
+    <div class="sf3-body animate-show" ng-hide='hide'>
+
+        <div class="sf3-searchbox-wrapper" ng-show="f.settings.searchbox.status=='yes'">
+            <input class="sf3-searchbox" ng-model="xx"/>
+        </div>
+
+        <div class="sf3-filter" ng-class="{'dodo':o.showmore.status=='scrollbar'}">
+            <div ng-class="{'sf3-scrollable':o.showmore.status=='scrollbar', 'sf3-readmore':o.showmore.status=='more/less'}"
+                 data-showmore-items="{{o.showmore.height}}"
+                 data-captionmore="{{f.captionmore[env.language_id]}}"
+                 data-captionless="{{f.captionless[env.language_id]}}"
+                 ">
+                <table class="sf3-table">
+                    <tr ng-repeat="fd in f.filterdata | filter:{text:xx}" ng-click="activate(fd.idx)" ng-class="o.zero(f.totals[fd.idx].total)">
+                        <td class="level{{fd.level}}" ng-class="{'active':fd.active}">
+                            <div class="sf3-input-wrapper">
+                                <input ng-if="f.render=='checkbox'" type="checkbox" ng-checked="fd.active" />
+                                <input ng-if="f.render=='radio'" type="radio" ng-checked="fd.active"/>
+
+                                <img
+                                    style="width:{{f.images.width}};height:{{f.images.height}}"
+                                    ng-if="f.render=='image list' && (f.images.source=='option image' || f.source.type=='manufacturers')" src="image/{{fd.image}}"  ng-class="{'mosaic-active':fd.active}"/>
+
+                                <div class="sf3-image-from-option-name"
+                                    style="background-color:{{fd.external?fd.external:fd.value}};width:{{f.images.width}};height:{{f.images.height}}"
+                                    ng-if="f.render=='image list' && (f.images.source=='value as CSS color')"></div>
+                            </div>
+                        </td>
+                        <td ng-class="{'active':fd.active}">
+                            <div class="label-wrapper">
+                                {{fd.text}}
+								<span class="sf3-totals" ng-show="f.settings.totals.status=='yes' && (f.settings.totals.type=='numbers' || f.settings.totals.type=='both')">{{f.totals[fd.idx].total}}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sf3-bar-wrapper" ng-show="o.totalsbars">
+                                <div class="sf3-bar-box" ng-style="o.barWidthBox()">
+                                    <div class="sf3-bar-content">
+                                        <img src="catalog/view/simonoop/sf3/assets/0.png" ng-style="o.barWidthImg(f.totals[fd.idx].total);" class="imgbar"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div ng-if="o.showmore.status=='more/less' && (f.filterdata.length > o.showmore.height)">
+                <div class="sf3-showmore">{{f.captionmore[env.language_id]}}</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

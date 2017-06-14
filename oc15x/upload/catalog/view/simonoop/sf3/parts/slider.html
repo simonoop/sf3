@@ -1,0 +1,22 @@
+<div class="sf3-element">
+    <div class="sf3-element-header">
+        <div class="sf3-title">{{f.caption[env.language_id]||f.source.name}}
+
+        <a ng-if="o.help.status=='text'" href="#" class="sf3-help sf3-help-text"  title="{{o.help_text[env.language_id]}}"></a>
+        <a ng-if="o.help.status=='link'" href="{{o.help.link}}" target="_blank" class="sf3-help sf3-help-link"></a>        
+        
+        </div>
+    </div>                   
+    <div  class="sf3-body">               
+    
+        <div class="sf3-searchbox-wrapper sf3-price" ng-show="f.settings.searchbox.status=='yes'">
+            <input class="sf3-searchbox sf3-price" ng-model="f.values[0]" ng-change="f.redraw()"/> 
+            <input class="sf3-searchbox sf3-price" ng-model="f.values[1]" ng-change="f.redraw()"/> 
+        </div>
+    
+        <div class="sf3-filter">
+            <div class="sf3-slider"></div>                   
+        </div>  
+        
+    </div>
+</div>

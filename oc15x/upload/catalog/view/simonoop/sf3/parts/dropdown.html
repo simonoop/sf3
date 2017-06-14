@@ -1,0 +1,21 @@
+<div class="sf3-element">
+    <div class="sf3-element-header" ng-click="o.collapsible?hide=!hide:null" ng-init="hide=(o.collapsible?(o.collapsibleDefault=='expanded'?false:true):false)">
+        <div class="sf3-title">{{f.caption[env.language_id]||f.source.name}}
+        <div class="collapsible-trigger" ng-class="hide?'up':'down'" ng-show="o.collapsible"></div>
+        </div>
+    </div>
+                
+    <div class="sf3-body animate-show" ng-hide='hide'>
+        <div class="sf3-filter">
+        
+            <select
+                ng-init="f.current=f.filterdata[0]"
+                ng-model="f.current"
+                ng-options="fd as build(fd.idx,fd.text) for fd in f.filterdata | filterdropdownitems:{totals:f.totals, zeroCount:o.zeroCount}"
+                ng-change="activate(f.current)"
+                >
+            </select>                   
+        </div>  
+        
+    </div>
+</div>
